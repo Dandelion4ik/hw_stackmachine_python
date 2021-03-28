@@ -1,14 +1,30 @@
+import sys
+
+
 class data_stack:
     data_stack = []
+    tos = None
 
     def pop(self):
         if len(self.data_stack) > 0:
+            if len(self.data_stack) > 1:
+                self.tos = self.data_stack[-2]
+            else:
+                self.tos = None
             return self.data_stack.pop()
         else:
             raise NameError('data_stack is empty')
 
     def push(self, value):
         self.data_stack.append(value)
+        self.tos = value
+
+    def print(self):
+        print(self.tos)
+
+
+def exit():
+    sys.exit(0)
 
 
 class stack_machine(data_stack):
@@ -16,7 +32,6 @@ class stack_machine(data_stack):
         self.instruct_pointer = None
         self.return_stack = []
         self.enter = enter
-        self.tos = 0
         self.heap = 0
         self.commands_map = {'-': self.sub,
                              '+': self.add,
@@ -37,7 +52,7 @@ class stack_machine(data_stack):
                              'read': self.read,
                              'call': self.call,
                              'return': self.return_back,
-                             'exit': self.exit,
+                             'exit': exit,
                              'store': self.store,
                              'load': self.load
                              }
@@ -71,3 +86,31 @@ class stack_machine(data_stack):
 
     def drop(self):
         self.pop()
+
+    def dup(self):
+        self.push(self.tos)
+
+    def if_clause(self):
+        true_clause = self.pop()
+        false_clause = self.pop()
+        condition_if = self.pop()
+        if condition_if:
+            self.push(true_clause)
+        else:
+            self.push(false_clause)
+
+    # def jmp(self):
+
+    def stack(self):
+        print('Data stack: ', self.data_stack)
+        print('Instruction pointer: ', self.instruct_pointer)
+        print('Return stack: ', self.return_stack)
+
+    def swap(self):
+        value_1 = self.pop()
+        value_2 = self.pop()
+        self.push(value_1)
+        self.push(value_2)
+
+    def read(self):
+        self.push(input())
