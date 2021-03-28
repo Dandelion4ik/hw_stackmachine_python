@@ -20,6 +20,9 @@ class data_stack:
         self.tos = value
 
     def print(self):
+        print(self.tos, end=" ")
+
+    def println(self):
         print(self.tos)
 
 
@@ -29,10 +32,10 @@ def exit():
 
 class stack_machine(data_stack):
     def __init__(self, enter):
-        self.instruct_pointer = None
+        self.instruct_pointer = 0
         self.return_stack = []
         self.enter = enter
-        self.heap = 0
+        self.heap = {}
         self.commands_map = {'-': self.sub,
                              '+': self.add,
                              '*': self.mul,
@@ -56,6 +59,20 @@ class stack_machine(data_stack):
                              'store': self.store,
                              'load': self.load
                              }
+
+    def do_command(self, command):
+        if command in self.commands_map:
+            self.commands_map[command]()
+        elif isinstance(command, int) or isinstance(command, float):
+            self.push(command)
+        else:
+            raise RuntimeError("Unknown command: '%s'" % command)
+
+    def run(self):
+        while self.instruct_pointer < len(self.enter):
+            command = self.enter[self.instruct_pointer]
+            self.instruct_pointer += 1
+            self.do_command(command)
 
     def sub(self):
         time_value = self.pop()
@@ -99,7 +116,11 @@ class stack_machine(data_stack):
         else:
             self.push(false_clause)
 
-    # def jmp(self):
+    def jmp(self):
+        if isinstance(self.tos, int) and -1 < self.tos < self.enter:
+            self.instruct_pointer = self.pop()
+        else:
+            RuntimeError('jmp incorrect')
 
     def stack(self):
         print('Data stack: ', self.data_stack)
@@ -114,3 +135,24 @@ class stack_machine(data_stack):
 
     def read(self):
         self.push(input())
+
+    def call(self):
+        self.return_stack.append(self.instruct_pointer)
+        self.jmp()
+
+    def return_back(self):
+        self.instruct_pointer = self.return_stack.pop()
+
+    def store(self):
+        key = self.pop()
+        value = self.pop()
+        self.heap[key] = value
+
+    def load(self):
+        self.push(self.heap[self.pop()])
+
+
+if __name__ == '__main__':
+    enter = [2, 1, 2, 'print', 'store','load', 'print']
+    a = stack_machine(enter)
+    a.run()
