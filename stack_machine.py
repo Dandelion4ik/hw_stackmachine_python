@@ -1,4 +1,5 @@
 import sys
+import  compilator
 
 
 class data_stack:
@@ -65,6 +66,8 @@ class stack_machine(data_stack):
             self.commands_map[command]()
         elif isinstance(command, int) or isinstance(command, float):
             self.push(command)
+        elif isinstance(command, str) and command[0] == command[-1] == '"':
+            self.push(command[1:-1])
         else:
             raise RuntimeError("Unknown command: '%s'" % command)
 
@@ -117,7 +120,7 @@ class stack_machine(data_stack):
             self.push(false_clause)
 
     def jmp(self):
-        if isinstance(self.tos, int) and -1 < self.tos < self.enter:
+        if isinstance(self.tos, int) and -1 < self.tos < len(self.enter):
             self.instruct_pointer = self.pop()
         else:
             RuntimeError('jmp incorrect')
@@ -153,6 +156,6 @@ class stack_machine(data_stack):
 
 
 if __name__ == '__main__':
-    enter = [2, 1, 2, 'print', 'store', 'load', 'print']
-    a = stack_machine(enter)
+    code = compilator.compiling('example.txt')
+    a = stack_machine(code)
     a.run()

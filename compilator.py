@@ -77,3 +77,4 @@ def compiling(file_name):
         for i in range(len(edit_commands)):
             if name_procedure == edit_commands[i]:
                 edit_commands[i] = length
+    return edit_commands
