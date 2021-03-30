@@ -24,28 +24,6 @@ def procedure_set_to_map(procedure_commands):
 
 
 def compiling(file_name):
-    commands_map = {'-',
-                    '+',
-                    '*',
-                    '/',
-                    '%',
-                    '==',
-                    'cast_int',
-                    'cast_str',
-                    'drop',
-                    'dup',
-                    'jmp',
-                    'stack',
-                    'swap',
-                    'println',
-                    'print',
-                    'read',
-                    'call',
-                    'return',
-                    'exit',
-                    'store',
-                    'load'
-                    }
     enter_commands = []
     edit_commands = []
     procedure_commands = []
@@ -84,5 +62,18 @@ def compiling(file_name):
             procedure_commands.append(command)
         else:
             edit_commands.append(command)
-    procedure_set_to_map(procedure_commands)
 
+    procedure_commands_map = procedure_set_to_map(procedure_commands)
+
+    for name_procedure in procedure_commands_map:
+        for i in range(len(edit_commands)):
+            if name_procedure == edit_commands[i]:
+                edit_commands[i] = 'call'
+                edit_commands.insert(i, name_procedure)
+    for name_procedure in procedure_commands_map:
+        length = len(edit_commands)
+        for value in procedure_commands_map[name_procedure]:
+            edit_commands.append(value)
+        for i in range(len(edit_commands)):
+            if name_procedure == edit_commands[i]:
+                edit_commands[i] = length
