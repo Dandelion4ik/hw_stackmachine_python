@@ -1,4 +1,4 @@
-#Home work №1 - Stack Machine
+# Home work №1 - Stack Machine
 ## Выполнил: Кавыкин Андрей
 **********************
 ### Files:
