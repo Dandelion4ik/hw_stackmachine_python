@@ -1,0 +1,16 @@
+// функция возведения в квадрат
+: power2 dup * ;
+// функция возведения в куб
+: power3 dup dup * *;
+// функция получения отрицательного числа
+: denier dup 2 * -;
+// функция получения int от пользователя
+: get_arg print read cast_int ;
+
+"Give me $a" get_arg "a" store
+"Give me $b" get_arg "b" store
+"Give me $c" get_arg "c" store
+"Give me $x" get_arg "x" store
+
+
+"a" load "x" load power3 * "b" load "x" load power2 * + "c" load "x" load * + denier println stack

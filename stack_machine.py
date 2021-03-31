@@ -156,6 +156,6 @@ class stack_machine(data_stack):
 
 
 if __name__ == '__main__':
-    code = compilator.compiling('example.txt')
+    code = compilator.compiling('forth_program.txt')
     a = stack_machine(code)
     a.run()
